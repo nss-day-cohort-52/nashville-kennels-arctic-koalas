@@ -19,8 +19,8 @@ export const Animal = ({ animal, syncAnimals,
     const { animalId } = useParams()
     const { resolveResource, resource: currentAnimal } = useResourceResolver()
 
-    useEffect(() => { //this use effect checks the current user to see if they are an employee
-        setAuth(getCurrentUser().employee)
+    useEffect(() => { 
+        setAuth(getCurrentUser().employee)//this line checks the current user to see if they are an employee
         resolveResource(animal, animalId, AnimalRepository.get)
     }, [])
 
@@ -90,7 +90,8 @@ export const Animal = ({ animal, syncAnimals,
 
                             <h6>Owners</h6>
                             <span className="small">
-                            {currentAnimal?.animalOwners?.map((owners)=> (`${owners.user.name}`)).join(", ")}
+                            {myOwners.map((owners)=> (`${owners.user.name}`)).join(", ") //changed to myOwners to allow for state changes
+                            }
                             </span>
 
                             {
@@ -98,7 +99,9 @@ export const Animal = ({ animal, syncAnimals,
                                     ? <select defaultValue=""
                                         name="owner"
                                         className="form-control small"
-                                        onChange={(event) => {AnimalOwnerRepository.assignOwner(currentAnimal.id, event.target.value)}} >
+                                        onChange={(event) => {
+                                            AnimalOwnerRepository.assignOwner(currentAnimal.id, parseInt(event.target.value)).then(getPeople)
+                                            }} >
                                         <option value="">
                                             Select {myOwners.length === 1 ? "another" : "an"} owner
                                         </option>
