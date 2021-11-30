@@ -53,14 +53,14 @@ export default ({ employee }) => {
                                 Caring for 0 animals
                             </section>
                             <section>
-                                Working at unknown location
+                                Working at {resource?.locations?.map((location) => (`${location.location.name}`)).join(" and ")}
                             </section>
                         </>
                         : ""
                 }
 
                 {
-                    <button className="btn--fireEmployee" onClick={() => {}}>Fire</button>
+                    <button className="btn--fireEmployee" onClick={() => { }}>Fire</button>
                 }
 
             </section>
