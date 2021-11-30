@@ -90,7 +90,7 @@ export const Animal = ({ animal, syncAnimals,
 
                             <h6>Owners</h6>
                             <span className="small">
-                                Owned by unknown
+                            {currentAnimal?.animalOwners?.map((owners)=> (`${owners.user.name}`)).join(", ")}
                             </span>
 
                             {
