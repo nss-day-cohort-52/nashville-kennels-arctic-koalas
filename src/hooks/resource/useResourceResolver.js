@@ -27,3 +27,5 @@ const useResourceResolver = () => {
 }
 
 export default useResourceResolver
+
+//custom hook is used in animals and employees to seemingly render

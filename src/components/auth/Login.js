@@ -6,7 +6,7 @@ import "./Login.css"
 
 const Login = () => {
     const [credentials, syncAuth] = useState({
-        email: "",
+        email: "", // what were getting back from the form that is sending the info to api
         remember: false
     })
     const { login } = useSimpleAuth()
