@@ -1,3 +1,5 @@
+// resources HAS TO BE A ARRAY OF OBJECTS , namespace will be a string 
+
 export const OxfordList = (resources: Array<Object>, namespace: string) => {
 
     const propArray: Array<string> = namespace.split(".")
@@ -25,3 +27,5 @@ export const OxfordList = (resources: Array<Object>, namespace: string) => {
         ""
     )
 }
+
+//typescript is an ext of javascript. it will add types to the javascrip
