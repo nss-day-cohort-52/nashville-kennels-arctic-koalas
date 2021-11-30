@@ -10,7 +10,9 @@ import SearchResults from "./search/SearchResults"
 export default () => {
     return (
         <>
+        
             <LocationRoutes />
+
             <AnimalRoutes />
             <EmployeeRoutes />
 
@@ -20,3 +22,4 @@ export default () => {
         </>
     )
 }
+
