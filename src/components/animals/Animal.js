@@ -84,9 +84,9 @@ export const Animal = ({ animal, syncAnimals,
                         <section>
                             <h6>Caretaker(s)</h6>
                             <span className="small">
-                                Unknown
-                            </span>
-
+                
+                                {currentAnimal?.animalCaretakers?.map((caretaker)=> (`${caretaker.user.name}`)).join(", ")}
+                                </ span>
 
                             <h6>Owners</h6>
                             <span className="small">
