@@ -50,7 +50,7 @@ export default ({ employee }) => {
                     employeeId
                         ? <>
                             <section>
-                                Caring for 0 animals
+                                Caring for {resource.animals?.length} animal{resource.animals?.length===1 ? "" : "s"}
                             </section>
                             <section>
                                 Working at unknown location
