@@ -7,6 +7,7 @@ import AnimalOwnerRepository from "../../repositories/AnimalOwnerRepository"
 import useModal from "../../hooks/ui/useModal"
 import useSimpleAuth from "../../hooks/ui/useSimpleAuth"
 import OwnerRepository from "../../repositories/OwnerRepository"
+import { Link } from "react-router-dom"
 
 import "./AnimalList.css"
 import "./cursor.css"
@@ -55,28 +56,38 @@ export const AnimalListComponent = (props) => {
 
 
             {
-                getCurrentUser().employee
-                    ? ""
-                    : <div className="centerChildren btn--newResource">
-                        <button type="button"
-                            className="btn btn-success "
-                            onClick={() => { history.push("/animals/new") }}>
-                            Register Animal
-                        </button>
-                    </div>
+                getCurrentUser().employee ? "" : <div className="centerChildren btn--newResource">
+                    <button type="button"
+                        className="btn btn-success "
+                        onClick={() => { history.push("/animals/new") }}>
+                        Register Animal
+                    </button>
+                </div>
             }
 
 
             <ul className="animals">
+            
                 {
-                    animals.map(anml =>
+                    getCurrentUser().employee ? animals.map(anml =>
                         <Animal key={`animal--${anml.id}`} animal={anml}
                             animalOwners={animalOwners}
                             owners={owners}
                             syncAnimals={syncAnimals}
                             setAnimalOwners={setAnimalOwners}
                             showTreatmentHistory={showTreatmentHistory}
-                        />)
+                        />) : 
+                            animals.map(anml => {if (anml.animalOwners.find(owner=>owner.userId===getCurrentUser().id))
+                            return <Animal key={`animal--${anml.id}`} animal={anml}
+                            animalOwners={animalOwners}
+                            owners={owners}
+                            syncAnimals={syncAnimals}
+                            setAnimalOwners={setAnimalOwners}
+                            showTreatmentHistory={showTreatmentHistory}
+                        />
+                            
+                        
+                        })
                 }
             </ul>
         </>
