@@ -50,6 +50,13 @@ export default {
             JSON.stringify(newAnimal)
         )
     },
+    async addAnimalCaretaker(newAnimalCaretaker) { //added function to add caretakers
+        return await fetchIt(
+            `${Settings.remoteURL}/animalCaretakers`,
+            "POST",
+            JSON.stringify(newAnimalCaretaker)
+        )
+    },
     async updateAnimal(editedAnimal) {
         return await fetchIt(
             `${Settings.remoteURL}/animals/${editedAnimal.id}`,
