@@ -50,18 +50,16 @@ export default ({ employee }) => {
                     employeeId
                         ? <>
                             <section>
-                                Caring for {resource.animals?.length} animal{resource.animals?.length===1 ? "" : "s"}
-                            </section>
+                                Caring for {resource.animals?.length} animal{resource.animals?.length === 1 ? "" : "s"}                            </section>
                             <section>
-                                Working at {resource?.locations?.map((location) => (`${location.location.name}`)).join(" and ")}
-                            </section>
+                                Working at {resource?.locations?.map((location) => (`${location.location.name}`)).join(" and ")}                            </section>
                         </>
                         : ""
                 }
 
                 {
                     <button className="btn--fireEmployee" onClick={() => { }}>Fire</button>
-                }
+}
 
             </section>
 
