@@ -100,12 +100,10 @@ export const Animal = ({ animal, syncAnimals,
                                             </option>
                                             {
                                                 employees.map(availableCaretaker => { //for each possible caretaker
-                                                    (currentAnimal.animalCaretakers.find(currentCaretaker => currentCaretaker.user.id === availableCaretaker.id)) ? //checks if they are already caring for an animal  
+                                                    return (currentAnimal.animalCaretakers.find(currentCaretaker => currentCaretaker.user.id === availableCaretaker.id)) ? //checks if they are already caring for an animal. note you need the return before the ternary starts  
                                                     null : //if they are, leave them off the select
-                                                    (<option key={availableCaretaker.id} value={availableCaretaker.id}>{availableCaretaker.name}</option>) //otherwise, add them as an option
-                                                }     
-                                                )
-                                            }
+                                                    <option key={availableCaretaker.id} value={availableCaretaker.id}>{availableCaretaker.name}</option> //otherwise, add them as an option
+                                            })}
 
                                         </select>
                                         <button className="btn btn-warning mt-3 form-control small" onClick={() =>
