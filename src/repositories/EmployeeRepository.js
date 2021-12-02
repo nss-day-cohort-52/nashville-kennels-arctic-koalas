@@ -12,7 +12,14 @@ export default {
                 return userWithRelationships
             })
     },
+
+    async wait(ttw) { return new Promise((resolve) => setTimeout(resolve,ttw))
+
+    },
+
     async delete(id) {
+        // console.log("Fired an employee")
+        // return await this.wait(2000)
         return await fetchIt(`${Settings.remoteURL}/users/${id}`, "DELETE")
     },
     async addEmployee(employee) {
