@@ -54,8 +54,7 @@ export default ({ employee, syncEmployees }) => {
                                 Caring for {resource.animals?.length} animal{resource.animals?.length === 1 ? "" : "s"}
                             </section>
                             <section>
-                                Working at {resource?.locations?.map((location) => (`${location.location.name}`)).join(" and ")}
-                            </section>
+                                Working at {resource?.locations?.map((location) => (`${location.location.name}`)).join(" and ")}                            </section>
                         </>
                         : ""
                 }
