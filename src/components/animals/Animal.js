@@ -18,11 +18,16 @@ export const Animal = ({ animal, syncAnimals,
     const history = useHistory()
     const { animalId } = useParams()
     const { resolveResource, resource: currentAnimal } = useResourceResolver()
+    const [employees, setEmployees] = useState([])
 
-    useEffect(() => { 
-        setAuth(getCurrentUser().employee)//this line checks the current user to see if they are an employee
-        resolveResource(animal, animalId, AnimalRepository.get)
+    useEffect(() => {
+        OwnerRepository.getAllEmployees().then(setEmployees) //pulls the list of employees for use with employees state
     }, [])
+
+    useEffect(() => {
+        setAuth(getCurrentUser().employee)//this line checks the current user to see if they are an employee
+        resolveResource(animal, animalId, AnimalRepository.get) //builds the animal into a complex component and causes it to render
+    }, [animal]) //added listening to the "animal". invoking "syncAnimals()" (passed in as param) should cause re-render
 
     useEffect(() => {
         if (owners) {
@@ -86,12 +91,38 @@ export const Animal = ({ animal, syncAnimals,
                             <span className="small">
                                 {currentAnimal?.animalCaretakers?.map((caretaker) => (caretaker.user.name)).join(", ")}
                             </span>
+                            {
+                                isEmployee
+                                    ? <>
+                                        <select defaultValue="" name={`caretaker${currentAnimal.id}`} className="form-control small">
+                                            <option value="">
+                                                Select {currentAnimal?.animalCaretakers?.length !== 0 ? "another" : "an"} caretaker
+                                            </option>
+                                            {
+                                                employees.map(availableCaretaker => { //for each possible caretaker
+                                                    return (currentAnimal.animalCaretakers.find(currentCaretaker => currentCaretaker.user.id === availableCaretaker.id)) ? //checks if they are already caring for an animal. note you need the return before the ternary starts  
+                                                    null : //if they are, leave them off the select
+                                                    <option key={availableCaretaker.id} value={availableCaretaker.id}>{availableCaretaker.name}</option> //otherwise, add them as an option
+                                            })}
+
+                                        </select>
+                                        <button className="btn btn-warning mt-3 form-control small" onClick={() =>
+                                            AnimalRepository.addAnimalCaretaker(
+                                                {//construction of a new animal owner object based on current animal and selected caretaker from the dropdown
+                                                    animalId: currentAnimal.id,
+                                                    userId: parseInt(document.querySelector(`[name=caretaker${currentAnimal.id}]`).value)
+                                                }
+                                            ).then(syncAnimals())
+                                        }>Assign Caretaker</button>
+                                    </>
+                                    : null
+                            }
 
 
                             <h6>Owners</h6>
                             <span className="small">
-                            {myOwners.map((owners)=> (`${owners.user.name}`)).join(", ") //changed to myOwners to allow for state changes
-                            }
+                                {myOwners.map((owners) => (`${owners.user.name}`)).join(", ") //changed to myOwners to allow for state changes
+                                }
                             </span>
 
                             {
@@ -100,8 +131,8 @@ export const Animal = ({ animal, syncAnimals,
                                         name="owner"
                                         className="form-control small"
                                         onChange={(event) => {
-                                            AnimalOwnerRepository.assignOwner(currentAnimal.id, parseInt(event.target.value)).then(getPeople)
-                                            }} >
+                                            AnimalOwnerRepository.assignOwner(currentAnimal.id, parseInt(event.target.value)).then(syncAnimals()) //with animal listening in place, changed from get people to syncAnimals() for consistency
+                                        }} >
                                         <option value="">
                                             Select {myOwners.length === 1 ? "another" : "an"} owner
                                         </option>
@@ -138,8 +169,8 @@ export const Animal = ({ animal, syncAnimals,
                                 ? <button className="btn btn-warning mt-3 form-control small" onClick={() =>
                                     AnimalOwnerRepository
                                         .removeOwnersAndCaretakers(currentAnimal.id)
-                                        .then(() => {}) // Remove animal
-                                        .then(() => {}) // Get all animals
+                                        .then(() => { }) // Remove animal
+                                        .then(() => { }) // Get all animals
                                 }>Discharge</button>
                                 : ""
                         }
