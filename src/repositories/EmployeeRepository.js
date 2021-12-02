@@ -12,6 +12,7 @@ export default {
                 return userWithRelationships
             })
     },
+
     async delete(id) {
         return await fetchIt(`${Settings.remoteURL}/users/${id}`, "DELETE")
     },
