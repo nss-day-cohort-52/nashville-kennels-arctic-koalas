@@ -1,10 +1,49 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { useLocation } from "react-router-dom";
 import "./SearchResults.css"
-
+import Employee from "../employees/Employee";
+import Location from "../locations/Location";
+import useModal from "../../hooks/ui/useModal";
+import OwnerRepository from "../../repositories/OwnerRepository";
+import AnimalOwnerRepository from "../../repositories/AnimalOwnerRepository";
+import AnimalRepository from "../../repositories/AnimalRepository";
+import { Animal } from "../animals/Animal";
+import useSimpleAuth from "../../hooks/ui/useSimpleAuth";
 
 export default () => {
     const location = useLocation()
+    const [animals, petAnimals] = useState([])
+    const [animalOwners, setAnimalOwners] = useState([])
+    const [owners, updateOwners] = useState([])
+    const [currentAnimal, setCurrentAnimal] = useState({ treatments: [] })
+    let { toggleDialog, modalIsOpen } = useModal("#dialog--animal")
+
+    const syncAnimals = () => {
+        AnimalRepository.getAll().then(data => petAnimals(data))
+    }
+
+    useEffect(() => {
+        OwnerRepository.getAllCustomers().then(updateOwners)
+        AnimalOwnerRepository.getAll().then(setAnimalOwners)
+        syncAnimals()
+    }, [])
+
+    const showTreatmentHistory = animal => {
+        setCurrentAnimal(animal)
+        toggleDialog()
+    }
+
+    useEffect(() => {
+        const handler = e => {
+            if (e.keyCode === 27 && modalIsOpen) {
+                toggleDialog()
+            }
+        }
+
+        window.addEventListener("keyup", handler)
+
+        return () => window.removeEventListener("keyup", handler)
+    }, [toggleDialog, modalIsOpen])
 
     const displayAnimals = () => {
         if (location.state?.animals.length) {
@@ -12,7 +51,14 @@ export default () => {
                 <React.Fragment>
                     <h2>Matching Animals</h2>
                     <section className="animals">
-                        Display matching animals
+                        {location.state.animals.map(anml =>
+                        <Animal key={`animal--${anml.id}`} animal={anml}
+                            animalOwners={animalOwners}
+                            owners={owners}
+                            syncAnimals={syncAnimals}
+                            setAnimalOwners={setAnimalOwners}
+                            showTreatmentHistory={showTreatmentHistory}
+                        />)}
                     </section>
                 </React.Fragment>
             )
@@ -25,7 +71,7 @@ export default () => {
                 <React.Fragment>
                     <h2>Matching Employees</h2>
                     <section className="employees">
-                        Display matching employees
+                        {location.state.employees.map(a => <Employee key={a.id} employee={a} />)}
                     </section>
                 </React.Fragment>
             )
@@ -38,7 +84,7 @@ export default () => {
                 <React.Fragment>
                     <h2>Matching Locations</h2>
                     <section className="locations">
-                        Display matching locations
+                        {location.state.locations.map(l => <Location key={l.id} location={l} />)}
                     </section>
                 </React.Fragment>
             )
