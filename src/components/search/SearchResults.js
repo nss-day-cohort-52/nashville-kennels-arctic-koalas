@@ -8,10 +8,11 @@ import OwnerRepository from "../../repositories/OwnerRepository";
 import AnimalOwnerRepository from "../../repositories/AnimalOwnerRepository";
 import AnimalRepository from "../../repositories/AnimalRepository";
 import { Animal } from "../animals/Animal";
-import useSimpleAuth from "../../hooks/ui/useSimpleAuth";
+import useSimpleAuth from "../../hooks/ui/useSimpleAuth"
 
 export default () => {
     const location = useLocation()
+    const { getCurrentUser } = useSimpleAuth()
     const [animals, petAnimals] = useState([])
     const [animalOwners, setAnimalOwners] = useState([])
     const [owners, updateOwners] = useState([])
@@ -50,6 +51,7 @@ export default () => {
             return (
                 <React.Fragment>
                     <h2>Matching Animals</h2>
+                    {getCurrentUser().employee ?
                     <section className="animals">
                         {location.state.animals.map(anml =>
                         <Animal key={`animal--${anml.id}`} animal={anml}
@@ -59,7 +61,8 @@ export default () => {
                             setAnimalOwners={setAnimalOwners}
                             showTreatmentHistory={showTreatmentHistory}
                         />)}
-                    </section>
+                    </section>:
+                    "non-employees may not search for animals" }
                 </React.Fragment>
             )
         }
