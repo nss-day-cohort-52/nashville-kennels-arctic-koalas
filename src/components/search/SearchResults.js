@@ -12,7 +12,8 @@ import useSimpleAuth from "../../hooks/ui/useSimpleAuth"
 
 export default () => {
     const location = useLocation()
-    const { getCurrentUser } = useSimpleAuth()
+    const { getCurrentUser } = useSimpleAuth() //needed to check employee state
+    //most of these useStates and useEffects required for the animal display
     const [animals, petAnimals] = useState([])
     const [animalOwners, setAnimalOwners] = useState([])
     const [owners, updateOwners] = useState([])
@@ -51,9 +52,9 @@ export default () => {
             return (
                 <React.Fragment>
                     <h2>Matching Animals</h2>
-                    {getCurrentUser().employee ?
+                    {getCurrentUser().employee ? //don't show animals if not an employee
                     <section className="animals">
-                        {location.state.animals.map(anml =>
+                        {location.state.animals.map(anml => //same construction as animallist, but using location.state.animals instead of animals arrau
                         <Animal key={`animal--${anml.id}`} animal={anml}
                             animalOwners={animalOwners}
                             owners={owners}
@@ -74,7 +75,8 @@ export default () => {
                 <React.Fragment>
                     <h2>Matching Employees</h2>
                     <section className="employees">
-                        {location.state.employees.map(a => <Employee key={a.id} employee={a} />)}
+                        {location.state.employees.map(a => <Employee key={a.id} employee={a} />)//same construction as employeelist, but using location.state.employees instead of employees array
+                        } 
                     </section>
                 </React.Fragment>
             )
@@ -87,7 +89,8 @@ export default () => {
                 <React.Fragment>
                     <h2>Matching Locations</h2>
                     <section className="locations">
-                        {location.state.locations.map(l => <Location key={l.id} location={l} />)}
+                        {location.state.locations.map(l => <Location key={l.id} location={l} />)//same construction as locationlist, but using location.state.locations instead of locations array
+                        }
                     </section>
                 </React.Fragment>
             )
