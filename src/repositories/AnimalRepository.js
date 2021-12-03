@@ -26,7 +26,16 @@ export default {
             })
     },
     async searchByName(query) {
-        return await fetchIt(`${Settings.remoteURL}/animals?_expand=employee&_sort=employee.id&_embed=treatments&_expand=location&name_like=${query}`)
+        const users = await OwnerRepository.getAll() //copied the extra code for expansion from get and getall to make sure I could get the full info in the search
+        const animals = await fetchIt(`${Settings.remoteURL}/animals?_embed=animalOwners&_embed=treatments&_embed=animalCaretakers&_expand=location&name_like=${query}`)
+        .then(data => {
+            const embedded = data.map(animal => {
+                animal = expandAnimalUser(animal, users)
+                return animal
+            })
+            return embedded
+        })
+        return animals
     },
     async delete(id) {
         return await fetchIt(`${Settings.remoteURL}/animals/${id}`, "DELETE")
