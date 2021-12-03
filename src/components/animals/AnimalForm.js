@@ -1,6 +1,10 @@
-import React, { useState, useContext } from "react"
+import React, { useState, useContext, useEffect } from "react"
+import {useHistory} from "react-router-dom"
 import "./AnimalForm.css"
 import AnimalRepository from "../../repositories/AnimalRepository";
+import EmployeeRepository from "../../repositories/EmployeeRepository";
+import AnimalOwnerRepository from "../../repositories/AnimalOwnerRepository";
+import useSimpleAuth from "../../hooks/ui/useSimpleAuth";
 
 
 export default (props) => {
@@ -10,6 +14,12 @@ export default (props) => {
     const [employees, setEmployees] = useState([])
     const [employeeId, setEmployeeId] = useState(0)
     const [saveEnabled, setEnabled] = useState(false)
+    const { getCurrentUser } = useSimpleAuth()
+    const history = useHistory()
+
+    useEffect(() => {
+        EmployeeRepository.getAll().then(setEmployees)
+    }, [])
 
     const constructNewAnimal = evt => {
         evt.preventDefault()
@@ -23,12 +33,18 @@ export default (props) => {
                 name: animalName,
                 breed: breed,
                 employeeId: eId,
-                locationId: parseInt(emp.locationId)
+                locationId: parseInt(emp.employeeLocations[0].locationId)
             }
-
-            AnimalRepository.addAnimal(animal)
+            AnimalRepository.addAnimal(animal).then(res => {
+                AnimalOwnerRepository.assignOwner(res.id, getCurrentUser().id)
+                AnimalRepository.addAnimalCaretaker({ //go back and refactor this to look more similar to assign owner on the above line. 
+                    animalId: res.id,
+                    userId: eId
+                }
+                )
+            })
                 .then(() => setEnabled(true))
-                .then(() => props.history.push("/animals"))
+                .then(() => history.push("/animals"))
         }
     }
 
