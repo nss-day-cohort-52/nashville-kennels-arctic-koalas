@@ -79,15 +79,16 @@ export default ({ employee, syncEmployees }) => {
 
                                 {isEditing &&  locations.map((location) => {
                                     const match=resource.locations?.find(el=> el.locationId === location.id)
-                                return <div> {location?.name}  <input type="checkbox" 
+                                return <div> {location?.name}  <input type ="checkbox" 
+                                key= {location.id}
                                 checked= {match}
-                                onClick={() =>  {
+                                onChange={() =>  {
                                     match ?
-                                EmployeeRepository.unassignEmployee(match.id).then(syncEmployees()):
+                                EmployeeRepository.unassignEmployee(match.id).then(resolveResource(employee, employeeId, EmployeeRepository.get)):
                                 EmployeeRepository.assignEmployee({ 
                                     userId: resource.id,
                                     locationId:location.id
-                                    }).then(syncEmployees())
+                                    }).then(resolveResource(employee, employeeId, EmployeeRepository.get))
                                     }
                                 } />  </div>})} 
  </section>
